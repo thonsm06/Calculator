@@ -8,11 +8,11 @@ displayValue.classList.add('displayValue');
 displayValue.textContent = '';
 displayScreen.appendChild(displayValue);
 
-let firstValue = '';
+let currentInput = '';
 let secondValue = '';
 let operator = '';
 let resetValue = false;
-
+let resetEquation = false;
 function add(a, b){
     return a + b;
 }
@@ -27,35 +27,24 @@ function div(a, b){
 }
 
 function operate(operator, num1, num2) {
-    let result = 0;
     if (operator === '+')
     {
-        result = add(Number(num1), Number(num2));
+        return add(Number(num1), Number(num2));
     }
     else if (operator === '-')
     {
-        result = sub(Number(num1), Number(num2));
+        return sub(Number(num1), Number(num2));
     }
     else if (operator === '*')
     {
-        result = mul(Number(num1), Number(num2));
+        return mul(Number(num1), Number(num2));
     }
     else if (operator === '/')
     {
-        result = div(Number(num1), Number(num2));
-    }
-    console.log(result);
-    displayValue.textContent = result;
-}
-
-//operate('/', 2, 5);
-
-function evaluate() {
-    if (displayValue.textContent != '')
-    {
-        displayValue.textContent = '';    
+        return div(Number(num1), Number(num2));
     }
 }
+
 
 const numberButton = document.querySelectorAll('.digits');
 numberButton.forEach(button => button.addEventListener('mousedown', () => {
@@ -64,38 +53,48 @@ numberButton.forEach(button => button.addEventListener('mousedown', () => {
         displayValue.textContent = '';
         resetValue = false;
     }
-    displayValue.textContent += button.value;
-    if (secondValue === '' && firstValue === '')
+    if (resetEquation === true) //clear the calculator after clicking on equal
     {
-        firstValue += button.value;
-        console.log(firstValue)
+        currentInput = '';
+        displayValue.textContent = '';
+        secondValue = '';
+        displayEquation.textContent = '';
+        resetEquation = false;
     }
-    else if (secondValue === '' && firstValue !== '')
-    {
-        secondValue += button.value;
-    }
+    currentInput += button.value;
+    displayValue.textContent = currentInput;
 }));
 
 const operatorButton = document.querySelectorAll('.operator');
 operatorButton.forEach(button => button.addEventListener('mousedown', () => {
-    if (firstValue !== '' && secondValue !== '')
+    if (resetEquation === true)
     {
-        evaluate();
+        currentInput = displayValue.textContent; //set current to total, ready for very next transfer
+        resetEquation = false;
     }
-    if(firstValue !== '' && secondValue === '')
-    {
-        operator = button.value;
-        resetValue = true;
-        displayEquation.textContent = firstValue + button.value;
-        //displayValue.textContent = button.value; //reset display to operator selection
-        console.log(displayEquation.textContent)
-    }
-    
+    secondValue = currentInput; //transfer currentInput into secondValue
+    console.log(secondValue);
+    currentInput = ''; //clear currentInput, ready for new number
+    operator = button.value;
+    displayEquation.textContent = `${secondValue} ${operator} `; //update equation
+    //resetValue = true;
+
 }));
 
 const equalButton = document.querySelector('.equal');
 equalButton.addEventListener('mousedown', () => {
-    operate(operator, firstValue, secondValue);
+    if (currentInput === '' && operator === '') //clicking enter without all variables
+    {
+        const val = `${operate(operator, secondValue, currentInput)}`
+    }
+    resetEquation = true;
+    const val = `${operate(operator, secondValue, currentInput)}`
+    displayValue.textContent = val;
+    displayEquation.textContent = `${secondValue} ${operator} ${currentInput} =`;
+    secondValue = val; //update secondValue to new total
+    //currentInput = ''; //clear current value
+    console.log(currentInput, secondValue);
+
 })
 
 const clear = document.querySelector('.clear');
@@ -103,6 +102,6 @@ clear.addEventListener('mousedown', () => {
     resetValue = false;
     displayEquation.textContent = '';
     displayValue.textContent = '';
-    firstValue = '';
+    currentInput = '';
     secondValue = '';
 })
