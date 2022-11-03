@@ -1,7 +1,5 @@
 body {
-  
     font-family: "Trebuchet MS", Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
-    
 }
 .main {
     display: flex;
@@ -67,5 +65,8 @@ button {
 
 .clear, .delete, .percent, .operator {
     background-color: rgb(228, 226, 226);
+}
 
+.equal{
+    background-color: rgb(139, 215, 218);
 }
