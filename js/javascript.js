@@ -3,6 +3,7 @@ let secondValue = ''; //store input after operator
 let operator = ''; //store current operator
 let resetValue = false; //clear everything 
 let resetEquation = false; //clear after hitting equal
+let previousButton = '';
 
 const displayScreen = document.querySelector('.displayContainer');
 let displayEquation = displayScreen.querySelector('.displayEquation')
@@ -20,7 +21,39 @@ buttonColor.forEach(button => button.addEventListener('mouseleave', () => {
 
 const numberButton = document.querySelectorAll('.digits');
 numberButton.forEach(button => button.addEventListener('click', () => {
-    if (resetValue === true)
+    /* what to do when digits are pressed after other classes
+    if previous was equal button, clear everything and starts new calculation
+    if previous was operator button, set second to input if cleared, otherwise, 
+        make calculation and set second to new total, then clear currentInput ready for new input
+    if keep adding to currentInput
+    */
+    if (previousButton === '=')
+    {
+        clear();
+        currentInput += button.value;
+    }
+    else if (previousButton === '+' || previousButton === '-' || previousButton === '*' || previousButton === '/')
+    {
+        if (secondValue === '') //part of first calculation
+        {
+            secondValue = currentInput;
+            currentInput += button.value;
+            displayValue.textContent = currentInput;
+            displayEquation.textContent = `${secondValue} ${operator}`; 
+        }
+        else if (secondValue !== '')
+        {
+            currentInput += button.value;
+            displayValue.textContent = currentInput;
+        }
+    }
+    else
+    {
+        currentInput += button.value;
+        displayValue.textContent = currentInput;
+    }
+
+    /* if (resetValue === true) //reset everything right after clicking equal
     {
         clear();
         resetValue = false;
@@ -32,23 +65,65 @@ numberButton.forEach(button => button.addEventListener('click', () => {
         secondValue = '';
         displayEquation.textContent = '';
         resetEquation = false;
-    }
-    currentInput += button.value; //update input
-    displayValue.textContent = currentInput; //update display with input
-    log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent);
+    } */
+    //currentInput += button.value; //update input
+    //displayValue.textContent = currentInput; //update display with input
+    previousButton = button.value;
+    log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent, previousButton);
 }));
 
 const operatorButton = document.querySelectorAll('.operator');
 operatorButton.forEach(button => button.addEventListener('click', () => {
-    
-    if (resetEquation === true)
+    /* What to do when operator are click after other classes
+    if previous was digits, update second to current
+    */
+    const pB = Number(previousButton);
+    if (pB >= 0 && pB <= 9) //if previous was a digits button
+    {
+        if (currentInput !== '' && secondValue !== '')
+        {
+            const val = `${operate(operator, Number(secondValue), Number(currentInput))}`;
+            currentInput = '';
+            secondValue = val;
+            displayEquation.textContent = `${val} ${button.value}`;
+            displayValue.textContent = val;
+        }
+        else
+        {
+            secondValue = currentInput;
+            currentInput = '';
+            displayEquation.textContent = `${secondValue} ${button.value}`;
+            console.log('asdf')
+        }
+        
+    }
+    else if (previousButton === '+' || previousButton === '-' || previousButton === '*' || previousButton === '/')
+    { //if spamming operator button, calculate once if there are both value.
+        if (currentInput !== '' && secondValue !== '')
+        {
+            const val = `${operate(operator, Number(secondValue), Number(currentInput))}`;
+            secondValue = val;
+            currentInput = '';
+            displayEquation.textContent = val;
+            console.log(secondValue)
+        }
+        else (currentInput === '' && secondValue !== '')
+        {
+            displayValue.textContent = secondValue;
+            displayEquation.textContent = `${secondValue} ${button.value}`;
+            console.log(secondValue)
+        }
+    }
+    else if (previousButton === '=')
+    {
+
+    }
+
+    /* if (resetEquation === true)
     {
         //currentInput = displayValue.textContent; //set current to total, ready for very next transfer
         resetEquation = false;
     }
-    else
-    {
-
         if (currentInput !== '' && secondValue !== '') //click an operator instead of equal
         {
             const val = `${operate(operator, Number(secondValue), Number(currentInput))}`; //calculate with the old operator
@@ -72,11 +147,13 @@ operatorButton.forEach(button => button.addEventListener('click', () => {
             secondValue = currentInput; //transfer currentInput into secondValue
             currentInput = ''; //clear currentInput, ready for new number
         }
-    }          
+        previousButton = button.value;
     operator = button.value;
-    displayEquation.textContent = `${secondValue} ${operator} `; //update equation
+    displayEquation.textContent = `${secondValue} ${operator} `; //update equation */
     //resetValue = true;
-    log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent);
+    operator = button.value;
+    previousButton = button.value;
+    log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent, previousButton);
 }));
 
 const equalButton = document.querySelector('.equal');
@@ -92,7 +169,8 @@ equalButton.addEventListener('mousedown', () => {
     displayEquation.textContent = `${secondValue} ${operator} ${currentInput} =`;
     secondValue = val; //update secondValue to new total
     //currentInput = ''; //clear current value
-    log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent);
+    previousButton = equalButton.value;
+    log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent, previousButton);
 })
 
 const clearButton = document.querySelector('.clear');
@@ -105,7 +183,8 @@ function clear() {
     currentInput = '';
     secondValue = '';
     operator = '';
-    log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent);
+    previousButton = '';
+    log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent, previousButton);
 }
 
 function add(a, b){
@@ -133,7 +212,7 @@ shadow.style.boxShadow = '0px 0px 10px 2px rgba(0, 0, 0, 0.5'; //add drop shadow
 
 
 //DEBUG
-function log(current, operator, second, value, equation) {
+function log(current, operator, second, value, equation, previous) {
     console.log('current:', current, '\n', 'operator:', operator, '\n', 'second:', second, '\n',
-        'Value:', value, '\n', 'Equation:', equation);
+        'Value:', value, '\n', 'Equation:', equation, '\n', 'Previous:', previous);
 }
