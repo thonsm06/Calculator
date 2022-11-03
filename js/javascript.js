@@ -1,51 +1,33 @@
-let displayScreen = document.querySelector('.displayContainer');
-let displayEquation = document.createElement('output');
-displayEquation.classList.add('displayEquation');
-displayEquation.textContent = '';
-displayScreen.appendChild(displayEquation);
-let displayValue = document.createElement('output');
-displayValue.classList.add('displayValue');
-displayValue.textContent = '';
-displayScreen.appendChild(displayValue);
-
 let currentInput = '';
 let secondValue = '';
 let operator = '';
 let resetValue = false;
 let resetEquation = false;
-function add(a, b){
-    return a + b;
-}
-function sub(a, b){
-    return a - b;
-}
-function mul(a, b){
-    return a * b;
-}
-function div(a, b){
-    return a / b;
-}
 
-function operate(operator, num1, num2) {
-    if (operator === '+')
-    {
-        return add(Number(num1), Number(num2));
-    }
-    else if (operator === '-')
-    {
-        return sub(Number(num1), Number(num2));
-    }
-    else if (operator === '*')
-    {
-        return mul(Number(num1), Number(num2));
-    }
-    else if (operator === '/')
-    {
-        return div(Number(num1), Number(num2));
-    }
+const displayScreen = document.querySelector('.displayContainer');
+let displayEquation = displayScreen.querySelector('.displayEquation')
+displayEquation.textContent = '';
+let displayValue = displayScreen.querySelector('.displayValue')
+displayValue.textContent = '';
+
+function color(button) {
+    console.log(1);
+    button.style.backgroundColor = 'orange';
 }
+const buttonColor = document.querySelectorAll('button');
+//buttonColor.forEach(button => button.addEventListener('mouseover', function color(button){}))
+buttonColor.forEach(button => button.addEventListener('mouseenter', function () {
+    //etDefault();
+    button.style.boxShadow = "0px 0px 15px 1px rgba(0, 0, 0, 0.6) inset";
+    console.log(button.style.backgroundColor);
+}))
 
+buttonColor.forEach(button => button.addEventListener('mouseleave', function () {
+    button.style.boxShadow = "none";
+    console.log(button.style.backgroundColor);
+}))
 
+console.log()
 const numberButton = document.querySelectorAll('.digits');
 numberButton.forEach(button => button.addEventListener('mousedown', () => {
     if (resetValue === true)
@@ -105,3 +87,35 @@ clear.addEventListener('mousedown', () => {
     currentInput = '';
     secondValue = '';
 })
+
+function add(a, b){
+    return a + b;
+}
+function sub(a, b){
+    return a - b;
+}
+function mul(a, b){
+    return a * b;
+}
+function div(a, b){
+    return a / b;
+}
+
+function operate(operator, num1, num2) {
+    if (operator === '+')
+    {
+        return add(Number(num1), Number(num2));
+    }
+    else if (operator === '-')
+    {
+        return sub(Number(num1), Number(num2));
+    }
+    else if (operator === '*')
+    {
+        return mul(Number(num1), Number(num2));
+    }
+    else if (operator === '/')
+    {
+        return div(Number(num1), Number(num2));
+    }
+}
