@@ -29,8 +29,17 @@ numberButton.forEach(button => button.addEventListener('click', () => {
     */
     if (previousButton === '=')
     {
-        clear();
-        currentInput += button.value;
+        if (secondValue === '0')
+        {
+            currentInput += button.value;
+            displayValue.textContent = currentInput;
+        }
+        else
+        {
+            clear();
+            currentInput += button.value;
+            displayValue.textContent = currentInput;
+        }
     }
     else if (previousButton === '+' || previousButton === '-' || previousButton === '*' || previousButton === '/')
     {
@@ -77,25 +86,10 @@ operatorButton.forEach(button => button.addEventListener('click', () => {
     /* What to do when operator are click after other classes
     if previous was digits, update second to current
     */
-    const pB = Number(previousButton);
-    if (pB >= 0 && pB <= 9) //if previous was a digits button
+    //const pB = Number(previousButton);
+    if (previousButton === '=')
     {
-        if (currentInput !== '' && secondValue !== '')
-        {
-            const val = `${operate(operator, Number(secondValue), Number(currentInput))}`;
-            currentInput = '';
-            secondValue = val;
-            displayEquation.textContent = `${val} ${button.value}`;
-            displayValue.textContent = val;
-        }
-        else
-        {
-            secondValue = currentInput;
-            currentInput = '';
-            displayEquation.textContent = `${secondValue} ${button.value}`;
-            console.log('asdf')
-        }
-        
+        //secondValue = 
     }
     else if (previousButton === '+' || previousButton === '-' || previousButton === '*' || previousButton === '/')
     { //if spamming operator button, calculate once if there are both value.
@@ -105,19 +99,63 @@ operatorButton.forEach(button => button.addEventListener('click', () => {
             secondValue = val;
             currentInput = '';
             displayEquation.textContent = val;
-            console.log(secondValue)
         }
-        else (currentInput === '' && secondValue !== '')
+        else if (currentInput === '' && secondValue !== '')
         {
             displayValue.textContent = secondValue;
             displayEquation.textContent = `${secondValue} ${button.value}`;
-            console.log(secondValue)
+        }
+        else if (currentInput !== '' && secondValue === '')
+        {
+
+        }
+        else
+        {
+
+            displayEquation.textContent = `${displayValue.textContent} ${button.value}`;
         }
     }
-    else if (previousButton === '=')
+    else if (previousButton === '')
     {
-
+        secondValue = '0';
+        displayValue.textContent = '0';
+        displayEquation.textContent = `0 ${button.value}`;
     }
+    else //if //(pB >= 0 && pB <= 9) //if previous was a digits button
+    {
+        if (operator === '')
+        {
+            secondValue = currentInput;
+            displayEquation.textContent = `${secondValue} ${button.value}`;
+            currentInput = '';
+        }
+        else
+        {
+            if (currentInput !== '' && secondValue !== '')
+            {
+                const val = `${operate(operator, Number(secondValue), Number(currentInput))}`;
+                currentInput = '';
+                secondValue = val;
+                displayEquation.textContent = `${val} ${button.value}`;
+                displayValue.textContent = val;
+            }
+            else if (currentInput !== '' && secondValue === '')
+            {
+    
+            }
+            else if (currentInput === '' && secondValue !== '')
+            {
+    
+            }
+            else
+            {
+                secondValue = currentInput;
+                currentInput = '';
+                displayEquation.textContent = `${secondValue} ${button.value}`;
+            }    
+        }
+    }
+
 
     /* if (resetEquation === true)
     {
@@ -158,17 +196,66 @@ operatorButton.forEach(button => button.addEventListener('click', () => {
 
 const equalButton = document.querySelector('.equal');
 equalButton.addEventListener('mousedown', () => {
-    if (currentInput === '' && operator === '') //clicking enter without all variables
+    /*what to do when click on equal
+    if click before anything else, set to 0=
+    if click after operator, calculate based on existing values
+    if click after number without operator, set to number=
+    */
+    if (previousButton === '')
+    {
+        secondValue = '0';
+        displayEquation.textContent = `0 =`;
+    }
+    else if (previousButton === '=')
+    {   
+        if (currentInput !== '' && secondValue !== '')
+        {
+            secondValue = displayValue.textContent;
+            const val = `${operate(operator, Number(secondValue), Number(currentInput))}`;
+            displayEquation.textContent = `${secondValue} ${operator} ${currentInput} =`;
+            displayValue.textContent = val;
+        }
+    }   
+    else if (previousButton === '+' || previousButton === '-' || previousButton === '*' || previousButton === '/')
+    {
+        // try to calculate
+        if (currentInput === '' && secondValue !== '')
+        {
+            currentInput = secondValue;
+        }
+        const val = `${operate(operator, Number(secondValue), Number(currentInput))}`;
+        //secondValue = val;
+        displayEquation.textContent = `${val} ${operator} ${currentInput} =`;
+        displayValue.textContent = val;
+    }
+    else //equal after number
+    {
+        if (operator === '')
+        {
+            secondValue = currentInput;
+            displayValue.textContent = currentInput;
+            displayEquation.textContent = `${currentInput} =`;
+            currentInput = '';
+        }
+        else
+        {
+            const val = `${operate(operator, Number(secondValue), Number(currentInput))}`;
+            displayEquation.textContent = `${secondValue} ${operator} ${currentInput} =`;
+            displayValue.textContent = val;
+        }
+    }
+
+/*     if (currentInput === '' && operator === '') //clicking enter without all variables
     {
         //const val = `${operate(operator, secondValue, currentInput)}`
-    }
-    resetValue = true;
+    } */
+/*     resetValue = true;
     resetEquation = true;
     const val = `${operate(operator, Number(secondValue), Number(currentInput))}`;
     displayValue.textContent = val;
     displayEquation.textContent = `${secondValue} ${operator} ${currentInput} =`;
     secondValue = val; //update secondValue to new total
-    //currentInput = ''; //clear current value
+    //currentInput = ''; //clear current value */
     previousButton = equalButton.value;
     log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent, previousButton);
 })
