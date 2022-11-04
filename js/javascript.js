@@ -19,43 +19,64 @@ buttonColor.forEach(button => button.addEventListener('mouseleave', () => {
     button.style.boxShadow = "none";
 }))
 
+document.addEventListener('keydown', (event) => {
+    var key = event.key;
+    for(let i = 0; i < buttonColor.length; i++)
+    {
+        if (buttonColor[i].value === key)
+        {
+            buttonColor[i].style.boxShadow = "0px 0px 28px 3px rgba(0, 0, 0, 0.25) inset";
+        }
+    }
+})
+document.addEventListener('keyup', (event) => {
+    var key = event.key;
+    for(let i = 0; i < buttonColor.length; i++)
+    {
+        if (buttonColor[i].value === key)
+        {
+            buttonColor[i].style.boxShadow = "none";
+        }
+    }
+})
+
 const numberButton = document.querySelectorAll('.digits');
 numberButton.forEach(button => button.addEventListener('click', () => numerals(button.value)));
-
 const operatorButton = document.querySelectorAll('.operator');
 operatorButton.forEach(button => button.addEventListener('click', () => operation(button.value)));
-
-const equalButton = document.querySelector('.equal');
-equalButton.addEventListener('mousedown', () => equal(equalButton.value));
-
-const clearAllButton = document.querySelector('.clearAll');
-clearAllButton.addEventListener('click', () => clearAll(clearAllButton.value));
-
-const percentButton = document.querySelector('.percent');
-percentButton.addEventListener('click', () => percent(percentButton.value));
-
-const signButton = document.querySelector('.sign');
-signButton.addEventListener('click', () => sign(signButton.value));
-
-const periodButton = document.querySelector('.period');
-periodButton.addEventListener('click', () => period(periodButton.value));
-
 const parenthesesButton = document.querySelectorAll('.parentheses');
 parenthesesButton.forEach(button => button.addEventListener('click', () => parentheses(button.value)));
 
+const equalButton = document.querySelector('.equal');
+equalButton.addEventListener('mousedown', () => equal(equalButton.value));
+const clearAllButton = document.querySelector('.clearAll');
+clearAllButton.addEventListener('click', () => clearAll(clearAllButton.value));
+const percentButton = document.querySelector('.percent');
+percentButton.addEventListener('click', () => percent(percentButton.value));
+const signButton = document.querySelector('.sign');
+signButton.addEventListener('click', () => sign(signButton.value));
+const periodButton = document.querySelector('.period');
+periodButton.addEventListener('click', () => period(periodButton.value));
 const clearLastButton = document.querySelector('.clearLast');
 clearLastButton.addEventListener('click', () => clearLast(clearLastButton.value));
-
 const deleteButton = document.querySelector('.delete');
 deleteButton.addEventListener('click', () => deletion(deleteButton.value));
-
 const powerButton = document.querySelector('.power');
 powerButton.addEventListener('click', () => power(powerButton.value));
+
+/* const asdf = document.querySelectorAll('button').addEventListener('keyup', function() {
+    console.log('asdf'); */
+//})
+/* keyboard.forEach(key => key.addEventListener('keyup', () => function() {
+    console.log('asdf')
+    key.style.boxShadow = '0px 0px 28px 3px rgba(0, 0, 0, 0.25) inset';
+})) */
 
 window.addEventListener('keydown', function (e) {
     if (e.key === ' ' || e.key === "Backspace") //spacebar
     {
         deletion(e.key);
+        
     }
     else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/')
     {
@@ -368,7 +389,6 @@ function round(num) { //run on calculation
     }
     else return num;
 }
-
 
 // #region Math functions
 function add(a, b){
