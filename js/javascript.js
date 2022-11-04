@@ -28,7 +28,7 @@ operatorButton.forEach(button => button.addEventListener('click', () => operatio
 const equalButton = document.querySelector('.equal');
 equalButton.addEventListener('mousedown', () => equal(equalButton.value));
 
-const clearButton = document.querySelector('.clear');
+const clearButton = document.querySelector('.clearAll');
 clearButton.addEventListener('click', clear);
 
 const percentButton = document.querySelector('.percent');
@@ -96,7 +96,28 @@ function sign(key){
 }
 function percent(key)
 {
-    
+    if (previousButton === '=')
+    {
+
+    }
+    else if (previousButton === '+' || previousButton === '-' || previousButton === '*' || previousButton === '/')
+    {
+
+    }
+    else if (previousButton === '')
+    {
+
+    }
+    else if (previousButton >= 0 && previousButton <= 9)
+    {
+        if (secondValue === '')
+        {
+            currentInput = '0';
+            secondValue = '0';
+            displayEquation.textContent = `${secondValue}`;
+            displayValue.textContent = currentInput;
+        }
+    }
 }
 function backspace (key) {
     //when pressed backspace, delete last digit of currentInput
@@ -105,6 +126,7 @@ function backspace (key) {
         currentInput = currentInput.slice(0, -1);
         if (currentInput === '')
         {
+            currentInput = '';
             displayValue.textContent = '0';
         }
         else
@@ -115,7 +137,7 @@ function backspace (key) {
     }
     log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent, previousButton);
 }
-function numerals(key) {
+function numerals(key) { //run when detecting number keys
     if (previousButton === '=')
     {
         if (secondValue === '0')
@@ -153,7 +175,7 @@ function numerals(key) {
     previousButton = key;
     log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent, previousButton);
 }
-function operation(key) {
+function operation(key) { //run when detecting operator keys
 
     if (previousButton === '=')
     {
@@ -163,7 +185,7 @@ function operation(key) {
     { //if spamming operator button, calculate once if there are both value.
         if (currentInput !== '' && secondValue !== '')
         {
-            const val = `${operate(operator, Number(secondValue), Number(currentInput))}`;
+            const val = round(`${operate(operator, Number(secondValue), Number(currentInput))}`);
             secondValue = val;
             currentInput = '';
             displayEquation.textContent = val;
@@ -201,7 +223,7 @@ function operation(key) {
         {
             if (currentInput !== '' && secondValue !== '')
             {
-                const val = `${operate(operator, Number(secondValue), Number(currentInput))}`;
+                const val = round(`${operate(operator, Number(secondValue), Number(currentInput))}`);
                 currentInput = '';
                 secondValue = val;
                 displayEquation.textContent = `${val} ${key}`;
@@ -227,7 +249,7 @@ function operation(key) {
     previousButton = key;
     log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent, previousButton);
 }
-function equal (key) {
+function equal (key) { //run on equal or Enter
     if (previousButton === '')
     {
         secondValue = '0';
@@ -238,7 +260,7 @@ function equal (key) {
         if (currentInput !== '' && secondValue !== '')
         {
             secondValue = displayValue.textContent;
-            const val = `${operate(operator, Number(secondValue), Number(currentInput))}`;
+            const val = round(`${operate(operator, Number(secondValue), Number(currentInput))}`);
             displayEquation.textContent = `${secondValue} ${operator} ${currentInput} =`;
             displayValue.textContent = val;
         }
@@ -266,7 +288,7 @@ function equal (key) {
         }
         else
         {
-            const val = `${operate(operator, Number(secondValue), Number(currentInput))}`;
+            const val = round(`${operate(operator, Number(secondValue), Number(currentInput))}`);
             displayEquation.textContent = `${secondValue} ${operator} ${currentInput} =`;
             displayValue.textContent = val;
         }
@@ -275,7 +297,7 @@ function equal (key) {
     log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent, previousButton);
 }
 
-function clear() {
+function clear() { //run on delete
     resetValue = false;
     displayEquation.textContent = '';
     displayValue.textContent = '0';
@@ -284,6 +306,14 @@ function clear() {
     operator = '';
     previousButton = '';
     log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent, previousButton);
+}
+
+function round(num) { //run on calculation 
+    if (Number(num) % 1 !== 0)
+    {
+        return(Number(num).toFixed(2)).toString();
+    }
+    else return num.toString();
 }
 
 function add(a, b){
