@@ -1,3 +1,4 @@
+//#region Initialize
 let currentInput = ''; //only variable that accept input
 let secondValue = ''; //store input after operator
 let operator = ''; //store current operator
@@ -10,7 +11,9 @@ let displayEquation = displayScreen.querySelector('.displayEquation')
 displayEquation.textContent = '';
 let displayValue = displayScreen.querySelector('.displayValue')
 displayValue.textContent = '0';
+//#endregion
 
+//#region highlights
 const buttonColor = document.querySelectorAll('button');
 buttonColor.forEach(button => button.addEventListener('mouseenter', () => {
     button.style.boxShadow = "0px 0px 28px 3px rgba(0, 0, 0, 0.25) inset";
@@ -19,7 +22,7 @@ buttonColor.forEach(button => button.addEventListener('mouseleave', () => {
     button.style.boxShadow = "none";
 }))
 
-document.addEventListener('keydown', (event) => {
+window.addEventListener('keydown', (event) => {
     var key = event.key;
     for(let i = 0; i < buttonColor.length; i++)
     {
@@ -29,7 +32,7 @@ document.addEventListener('keydown', (event) => {
         }
     }
 })
-document.addEventListener('keyup', (event) => {
+window.addEventListener('keyup', (event) => {
     var key = event.key;
     for(let i = 0; i < buttonColor.length; i++)
     {
@@ -40,6 +43,11 @@ document.addEventListener('keyup', (event) => {
     }
 })
 
+const shadow = document.querySelector('.main'); //select main
+shadow.style.boxShadow = '0px 0px 10px 2px rgba(0, 0, 0, 0.5'; //add drop shadow to entire calculator
+//#endregion
+
+//#region Selections
 const numberButton = document.querySelectorAll('.digits');
 numberButton.forEach(button => button.addEventListener('click', () => numerals(button.value)));
 const operatorButton = document.querySelectorAll('.operator');
@@ -63,20 +71,12 @@ const deleteButton = document.querySelector('.delete');
 deleteButton.addEventListener('click', () => deletion(deleteButton.value));
 const powerButton = document.querySelector('.power');
 powerButton.addEventListener('click', () => power(powerButton.value));
-
-/* const asdf = document.querySelectorAll('button').addEventListener('keyup', function() {
-    console.log('asdf'); */
-//})
-/* keyboard.forEach(key => key.addEventListener('keyup', () => function() {
-    console.log('asdf')
-    key.style.boxShadow = '0px 0px 28px 3px rgba(0, 0, 0, 0.25) inset';
-})) */
+//#endregion
 
 window.addEventListener('keydown', function (e) {
     if (e.key === ' ' || e.key === "Backspace") //spacebar
     {
         deletion(e.key);
-        
     }
     else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/')
     {
@@ -93,13 +93,14 @@ window.addEventListener('keydown', function (e) {
     else if (e.key === '%')
     {
         percent(e.key);
-
     }
     else if (e.key >= 0 && e.key <= 9)
     {
         numerals(e.key);
     }
 })
+
+//#region FUNCTIONS
 function power(key) {
     
 }
@@ -389,6 +390,7 @@ function round(num) { //run on calculation
     }
     else return num;
 }
+//#endregion
 
 // #region Math functions
 function add(a, b){
@@ -412,8 +414,6 @@ function operate(operator, num1, num2) {
 }
 // #endregion
 
-const shadow = document.querySelector('.main'); //select main
-shadow.style.boxShadow = '0px 0px 10px 2px rgba(0, 0, 0, 0.5'; //add drop shadow to entire calculator
 
 
 //DEBUG
