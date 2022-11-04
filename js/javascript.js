@@ -28,19 +28,34 @@ operatorButton.forEach(button => button.addEventListener('click', () => operatio
 const equalButton = document.querySelector('.equal');
 equalButton.addEventListener('mousedown', () => equal(equalButton.value));
 
-const clearButton = document.querySelector('.clearAll');
-clearButton.addEventListener('click', clear);
+const clearAllButton = document.querySelector('.clearAll');
+clearAllButton.addEventListener('click', () => clearAll(clearAllButton.value));
 
 const percentButton = document.querySelector('.percent');
-percentButton.addEventListener('click', percent)
+percentButton.addEventListener('click', () => percent(percentButton.value));
 
 const signButton = document.querySelector('.sign');
 signButton.addEventListener('click', () => sign(signButton.value));
 
+const periodButton = document.querySelector('.period');
+periodButton.addEventListener('click', () => period(periodButton.value));
+
+const parenthesesButton = document.querySelectorAll('.parentheses');
+parenthesesButton.forEach(button => button.addEventListener('click', () => parentheses(button.value)));
+
+const clearLastButton = document.querySelector('.clearLast');
+clearLastButton.addEventListener('click', () => clearLast(clearLastButton.value));
+
+const deleteButton = document.querySelector('.delete');
+deleteButton.addEventListener('click', () => deletion(deleteButton.value));
+
+const powerButton = document.querySelector('.power');
+powerButton.addEventListener('click', () => power(powerButton.value));
+
 window.addEventListener('keydown', function (e) {
     if (e.key === ' ' || e.key === "Backspace") //spacebar
     {
-        backspace(e.key);
+        deletion(e.key);
     }
     else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/')
     {
@@ -64,6 +79,15 @@ window.addEventListener('keydown', function (e) {
         numerals(e.key);
     }
 })
+function power(key) {
+    
+}
+function parentheses(key) {
+
+}
+function period(key){
+
+}
 function sign(key){
     if (previousButton === '=')
     {
@@ -79,7 +103,6 @@ function sign(key){
                     displayValue.textContent = `${secondValue}`;
                     
                 }
-                
             }
         }
     }
@@ -87,9 +110,33 @@ function sign(key){
     {
 
     }
-    else if (previousButton === '')
+    else if (previousButton >= 0 && previousButton <= 9)
     {
-
+        if (Math.sign(currentInput) === 1) //if positive, turn negative
+        {
+            
+            currentInput = `-${currentInput}`;
+            displayValue.textContent = currentInput.toString();
+        }
+        else
+        {
+            currentInput = `${currentInput*-1}`;
+            displayValue.textContent = currentInput;
+        }
+    }
+    else if (previousButton === '+/-') //if spamming sign button, keep switching positive and negative
+    {
+        if (Math.sign(currentInput) === 1) //if positive, turn negative
+        {
+            
+            currentInput = `-${currentInput}`;
+            displayValue.textContent = currentInput.toString();
+        }
+        else
+        {
+            currentInput = `${currentInput*-1}`;
+            displayValue.textContent = currentInput;
+        }
     }
     previousButton = key;
     log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent, previousButton);
@@ -119,7 +166,7 @@ function percent(key)
         }
     }
 }
-function backspace (key) {
+function deletion (key) {
     //when pressed backspace, delete last digit of currentInput
     if (currentInput !== '')
     {
@@ -296,8 +343,7 @@ function equal (key) { //run on equal or Enter
     previousButton = key;
     log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent, previousButton);
 }
-
-function clear() { //run on delete
+function clearAll(key) { //run on delete
     resetValue = false;
     displayEquation.textContent = '';
     displayValue.textContent = '0';
@@ -307,15 +353,24 @@ function clear() { //run on delete
     previousButton = '';
     log(currentInput, operator, secondValue, displayValue.textContent, displayEquation.textContent, previousButton);
 }
+function clearLast(key) {
 
+}
 function round(num) { //run on calculation 
     if (Number(num) % 1 !== 0)
     {
-        return(Number(num).toFixed(2)).toString();
+        num = (Number(num).toFixed(2)).toString();
+        if (num.charAt(num.length-1) === '0')
+        {
+            num = num.slice(0, -1);
+        }
+        return num;
     }
-    else return num.toString();
+    else return num;
 }
 
+
+// #region Math functions
 function add(a, b){
     return a + b;
 }
@@ -335,6 +390,7 @@ function operate(operator, num1, num2) {
     else if (operator === '*') return mul(num1, num2);
     else if (operator === '/') return div(num1, num2);
 }
+// #endregion
 
 const shadow = document.querySelector('.main'); //select main
 shadow.style.boxShadow = '0px 0px 10px 2px rgba(0, 0, 0, 0.5'; //add drop shadow to entire calculator
